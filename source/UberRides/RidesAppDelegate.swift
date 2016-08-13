@@ -42,11 +42,11 @@
     public override init() {
         super.init()
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(didBecomeActive), name: UIApplicationDidBecomeActiveNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didBecomeActive), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
     }
     
     deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
     
     //MARK: Public Methods
@@ -67,7 +67,7 @@
      communicate information to the receiving app As passed to the corresponding AppDelegate method
      - returns: true if the URL was intended for the Rides SDK, false otherwise
      */
-    public func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject?) -> Bool {
+    public func application(_ application: UIApplication, openURL url: URL, sourceApplication: String?, annotation: AnyObject?) -> Bool {
         guard let manager = loginManager else {
             return false
         }
@@ -79,8 +79,8 @@
         return urlHandled
     }
     
-    public func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        guard let options = launchOptions, let launchURL = options[UIApplicationLaunchOptionsURLKey] as? NSURL else {
+    public func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+        guard let options = launchOptions, let launchURL = options[UIApplicationLaunchOptionsURLKey] as? URL else {
             return false
         }
         
@@ -94,7 +94,7 @@
     
     //MARK: Private Methods
     
-    @objc private func didBecomeActive(notification: NSNotification) {
+    @objc private func didBecomeActive(_ notification: Notification) {
         if let manager = loginManager {
             manager.applicationDidBecomeActive()
             loginManager = nil

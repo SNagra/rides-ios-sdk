@@ -38,7 +38,7 @@ struct PaymentMethods {
 }
 
 extension PaymentMethods: UberModel {
-    mutating func mapping(map: Map) {
+    mutating func mapping(_ map: Map) {
         lastUsed <- map["last_used"]
         list     <- map["payment_methods"]
     }
@@ -62,7 +62,7 @@ extension PaymentMethods: UberModel {
 }
 
 extension PaymentMethod: UberModel {
-    public func mapping(map: Map) {
+    public func mapping(_ map: Map) {
         paymentDescription <- map["description"]
         methodID           <- map["payment_method_id"]
         type               <- map["type"]

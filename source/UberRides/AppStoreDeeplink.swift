@@ -39,11 +39,11 @@ import Foundation
         let domain = "m.uber.com"
         let path = "/sign-up"
         
-        let clientIDQueryItem = NSURLQueryItem(name: "client_id", value: Configuration.getClientID())
+        let clientIDQueryItem = URLQueryItem(name: "client_id", value: Configuration.getClientID())
         
         let userAgent = userAgent ?? "rides-ios-v\(Configuration.sdkVersion)"
         
-        let userAgentQueryItem = NSURLQueryItem(name: "user-agent", value: userAgent)
+        let userAgentQueryItem = URLQueryItem(name: "user-agent", value: userAgent)
         
         let queryItems = [clientIDQueryItem, userAgentQueryItem]
         

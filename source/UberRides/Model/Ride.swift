@@ -63,7 +63,7 @@ import ObjectMapper
 }
 
 extension Ride: UberModel {
-    public func mapping(map: Map) {
+    public func mapping(_ map: Map) {
         destination     <- map["destination"]
         driver          <- map["driver"]
         driverLocation  <- map["location"]
@@ -73,7 +73,7 @@ extension Ride: UberModel {
         surgeMultiplier <- map["surge_multiplier"]
         vehicle         <- map["vehicle"]
         
-        status = .Unknown
+        status = .unknown
         if let value = map["status"].currentValue as? String {
             status = RideStatusFactory.convertRideStatus(value)
         }

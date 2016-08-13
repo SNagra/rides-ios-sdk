@@ -34,28 +34,28 @@ import UIKit
     let uberImageView: UIImageView = UIImageView()
     let uberTitleLabel: UILabel = UILabel()
     
-    public var colorStyle: RequestButtonColorStyle = .Black {
+    public var colorStyle: RequestButtonColorStyle = .black {
         didSet {
             colorStyleDidUpdate(colorStyle)
         }
     }
     
-    override public var highlighted: Bool {
+    override public var isHighlighted: Bool {
         didSet {
-            updateColors(highlighted)
+            updateColors(isHighlighted)
         }
     }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
-        colorStyleDidUpdate(.Black)
+        colorStyleDidUpdate(.black)
     }
     
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setup()
-        colorStyleDidUpdate(.Black)
+        colorStyleDidUpdate(.black)
     }
     
     /**
@@ -98,47 +98,47 @@ import UIKit
         let views = ["imageView": uberImageView, "titleLabel": uberTitleLabel]
         let metrics = ["edgePadding": horizontalEdgePadding, "verticalPadding": verticalPadding, "imageLabelPadding": imageLabelPadding]
         
-        let horizontalConstraints = NSLayoutConstraint.constraintsWithVisualFormat("H:|-edgePadding-[imageView]-imageLabelPadding-[titleLabel]-(edgePadding)-|", options: NSLayoutFormatOptions(rawValue: 0), metrics: metrics, views: views)
-        let verticalContraints = NSLayoutConstraint.constraintsWithVisualFormat("V:|-verticalPadding-[imageView]-verticalPadding-|", options: NSLayoutFormatOptions(rawValue: 0), metrics: metrics, views: views)
+        let horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-edgePadding-[imageView]-imageLabelPadding-[titleLabel]-(edgePadding)-|", options: NSLayoutFormatOptions(rawValue: 0), metrics: metrics, views: views)
+        let verticalContraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|-verticalPadding-[imageView]-verticalPadding-|", options: NSLayoutFormatOptions(rawValue: 0), metrics: metrics, views: views)
         
         addConstraints(horizontalConstraints)
         addConstraints(verticalContraints)
     }
     
-    override public func sizeThatFits(size: CGSize) -> CGSize {
-        let logoSize = uberImageView.image?.size ?? CGSizeZero
-        let titleSize = uberTitleLabel.intrinsicContentSize()
+    override public func sizeThatFits(_ size: CGSize) -> CGSize {
+        let logoSize = uberImageView.image?.size ?? CGSize.zero
+        let titleSize = uberTitleLabel.intrinsicContentSize
         
         let width: CGFloat = 4*horizontalEdgePadding + imageLabelPadding + logoSize.width + titleSize.width
         let height: CGFloat = 2*verticalPadding + max(logoSize.height, titleSize.height)
         
-        return CGSizeMake(width, height)
+        return CGSize(width: width, height: height)
     }
     
     // Mark: Internal Interface
 
-    func colorStyleDidUpdate(style: RequestButtonColorStyle) {
+    func colorStyleDidUpdate(_ style: RequestButtonColorStyle) {
         switch colorStyle {
-        case .Black:
-            backgroundColor = ColorUtil.colorForUberButtonColor(.UberBlack)
-            uberTitleLabel.textColor = ColorUtil.colorForUberButtonColor(.UberWhite)
-            uberImageView.tintColor = ColorUtil.colorForUberButtonColor(.UberWhite)
-        case .White :
-            backgroundColor = ColorUtil.colorForUberButtonColor(.UberWhite)
-            uberTitleLabel.textColor = ColorUtil.colorForUberButtonColor(.UberBlack)
-            uberImageView.tintColor = ColorUtil.colorForUberButtonColor(.UberBlack)
+        case .black:
+            backgroundColor = ColorUtil.colorForUberButtonColor(.uberBlack)
+            uberTitleLabel.textColor = ColorUtil.colorForUberButtonColor(.uberWhite)
+            uberImageView.tintColor = ColorUtil.colorForUberButtonColor(.uberWhite)
+        case .white :
+            backgroundColor = ColorUtil.colorForUberButtonColor(.uberWhite)
+            uberTitleLabel.textColor = ColorUtil.colorForUberButtonColor(.uberBlack)
+            uberImageView.tintColor = ColorUtil.colorForUberButtonColor(.uberBlack)
         }
     }
     
     // Mark: Private Interface
     
-    private func updateColors(highlighted : Bool) {
+    private func updateColors(_ highlighted : Bool) {
         var color: UberButtonColor
         switch colorStyle {
-        case .Black:
-            color = highlighted ? .BlackHighlighted : .UberBlack
-        case .White:
-            color = highlighted ? .WhiteHighlighted : .UberWhite
+        case .black:
+            color = highlighted ? .blackHighlighted : .uberBlack
+        case .white:
+            color = highlighted ? .whiteHighlighted : .uberWhite
         }
         backgroundColor = ColorUtil.colorForUberButtonColor(color)
     }

@@ -36,7 +36,7 @@ struct TimeEstimates {
 }
 
 extension TimeEstimates: UberModel {
-    mutating func mapping(map: Map) {
+    mutating func mapping(_ map: Map) {
         list <- map["times"]
     }
 }
@@ -61,7 +61,7 @@ extension TimeEstimates: UberModel {
 }
 
 extension TimeEstimate: UberModel {
-    public func mapping(map: Map) {
+    public func mapping(_ map: Map) {
         productID <- map["product_id"]
         name      <- map["display_name"]
         estimate  <- map["estimate"]

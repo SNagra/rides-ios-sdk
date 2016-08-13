@@ -72,7 +72,7 @@ import ObjectMapper
 }
 
 extension RideReceipt: UberModel {
-    public func mapping(map: Map) {
+    public func mapping(_ map: Map) {
         chargeAdjustments <- map["charge_adjustments"]
         charges           <- map["charges"]
         currencyCode      <- map["currency_code"]

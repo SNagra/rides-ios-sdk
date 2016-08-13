@@ -37,7 +37,7 @@ struct UberProducts {
 }
 
 extension UberProducts: UberModel {
-    mutating func mapping(map: Map) {
+    mutating func mapping(_ map: Map) {
         list <- map["products"]
     }
 }
@@ -71,7 +71,7 @@ extension UberProducts: UberModel {
 }
 
 extension UberProduct : UberModel {
-    public func mapping(map: Map) {
+    public func mapping(_ map: Map) {
         productID    <- map["product_id"]
         name         <- map["display_name"]
         details      <- map["description"]
@@ -116,7 +116,7 @@ extension UberProduct : UberModel {
 }
 
 extension PriceDetails : Mappable {
-    public func mapping(map: Map) {
+    public func mapping(_ map: Map) {
         distanceUnit    <- map["distance_unit"]
         currencyCode    <- map["currency_code"]
         costPerMinute   <- map["cost_per_minute"]
@@ -145,7 +145,7 @@ public class ServiceFee : NSObject {
 }
 
 extension ServiceFee: Mappable {
-    public func mapping(map: Map) {
+    public func mapping(_ map: Map) {
         name <- map["name"]
         fee  <- map["fee"]
     }

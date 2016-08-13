@@ -36,7 +36,7 @@ struct PriceEstimates {
 }
 
 extension PriceEstimates: UberModel {
-    mutating func mapping(map: Map) {
+    mutating func mapping(_ map: Map) {
         list <- map["prices"]
     }
 }
@@ -86,7 +86,7 @@ extension PriceEstimates: UberModel {
 }
 
 extension PriceEstimate: UberModel {
-    public func mapping(map: Map) {
+    public func mapping(_ map: Map) {
         currencyCode         <- map["currency_code"]
         distance             <- map["distance"]
         duration             <- map["duration"]

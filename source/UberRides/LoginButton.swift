@@ -25,8 +25,8 @@
 import UIKit
 
 @objc public enum LoginButtonState : Int {
-    case SignedIn
-    case SignedOut
+    case signedIn
+    case signedOut
 }
 
 /**
@@ -40,7 +40,7 @@ import UIKit
      - parameter button:  The LoginButton involved
      - parameter success: True if log out succeeded, false otherwise
      */
-    @objc func loginButton(button: LoginButton, didLogoutWithSuccess success: Bool)
+    @objc func loginButton(_ button: LoginButton, didLogoutWithSuccess success: Bool)
     
     /**
      THe Login Button completed a login
@@ -49,7 +49,7 @@ import UIKit
      - parameter accessToken: The access token that
      - parameter error:       The error that occured
      */
-    @objc func loginButton(button: LoginButton, didCompleteLoginWithToken accessToken: AccessToken?, error: NSError?)
+    @objc func loginButton(_ button: LoginButton, didCompleteLoginWithToken accessToken: AccessToken?, error: NSError?)
 }
 
 /// Button to handle logging in to Uber
@@ -78,9 +78,9 @@ import UIKit
     /// The current LoginButtonState of this button (signed in / signed out)
     public var buttonState: LoginButtonState {
         if let _ = TokenManager.fetchToken(accessTokenIdentifier, accessGroup: keychainAccessGroup) {
-            return .SignedIn
+            return .signedIn
         } else {
-            return .SignedOut
+            return .signedOut
         }
     }
     
@@ -102,14 +102,14 @@ import UIKit
     }
     
     public required init?(coder aDecoder: NSCoder) {
-        loginManager = LoginManager(loginType: .Native)
+        loginManager = LoginManager(loginType: .native)
         scopes = []
         super.init(coder: aDecoder)
         setup()
     }
     
     deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
     
     //Mark: UberButton
@@ -119,9 +119,9 @@ import UIKit
      */
     override public func setup() {
         super.setup()
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(refreshContent), name: TokenManager.TokenManagerDidSaveTokenNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(refreshContent), name: TokenManager.TokenManagerDidDeleteTokenNotification, object: nil)
-        addTarget(self, action: #selector(uberButtonTapped), forControlEvents: .TouchUpInside)
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshContent), name: NSNotification.Name(rawValue: TokenManager.TokenManagerDidSaveTokenNotification), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshContent), name: NSNotification.Name(rawValue: TokenManager.TokenManagerDidDeleteTokenNotification), object: nil)
+        addTarget(self, action: #selector(uberButtonTapped), for: .touchUpInside)
         loginCompletion = { token, error in
             self.delegate?.loginButton(self, didCompleteLoginWithToken: token, error: error)
             self.refreshContent()
@@ -134,7 +134,7 @@ import UIKit
     override public func setContent() {
         super.setContent()
         
-        let buttonFont = UIFont.systemFontOfSize(13)
+        let buttonFont = UIFont.systemFont(ofSize: 13)
         let titleText = titleForButtonState(buttonState)
         let logo = getImage("ic_logo_white")
         
@@ -143,7 +143,7 @@ import UIKit
         uberTitleLabel.text = titleText
         
         uberImageView.image = logo
-        uberImageView.contentMode = .Center
+        uberImageView.contentMode = .center
     }
     
     /**
@@ -154,20 +154,20 @@ import UIKit
         uberTitleLabel.translatesAutoresizingMaskIntoConstraints = false
         uberImageView.translatesAutoresizingMaskIntoConstraints = false
         
-        uberImageView.setContentHuggingPriority(UILayoutPriorityDefaultHigh, forAxis: .Horizontal)
-        uberTitleLabel.setContentHuggingPriority(UILayoutPriorityDefaultHigh, forAxis: .Horizontal)
-        uberTitleLabel.setContentHuggingPriority(UILayoutPriorityDefaultHigh, forAxis: .Vertical)
+        uberImageView.setContentHuggingPriority(UILayoutPriorityDefaultHigh, for: .horizontal)
+        uberTitleLabel.setContentHuggingPriority(UILayoutPriorityDefaultHigh, for: .horizontal)
+        uberTitleLabel.setContentHuggingPriority(UILayoutPriorityDefaultHigh, for: .vertical)
         
-        let imageLeftConstraint = NSLayoutConstraint(item: uberImageView, attribute: .Left, relatedBy: .Equal, toItem: self, attribute: .Left, multiplier: 1.0, constant: loginHorizontalEdgePadding)
-        let imageTopConstraint = NSLayoutConstraint(item: uberImageView, attribute: .Top, relatedBy: .Equal, toItem: self, attribute: .Top, multiplier: 1.0, constant: loginVerticalPadding)
-        let imageBottomConstraint = NSLayoutConstraint(item: uberImageView, attribute: .Bottom, relatedBy: .Equal, toItem: self, attribute: .Bottom, multiplier: 1.0, constant: -loginVerticalPadding)
+        let imageLeftConstraint = NSLayoutConstraint(item: uberImageView, attribute: .left, relatedBy: .equal, toItem: self, attribute: .left, multiplier: 1.0, constant: loginHorizontalEdgePadding)
+        let imageTopConstraint = NSLayoutConstraint(item: uberImageView, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: loginVerticalPadding)
+        let imageBottomConstraint = NSLayoutConstraint(item: uberImageView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: -loginVerticalPadding)
         
-        let titleLabelRightConstraint = NSLayoutConstraint(item: uberTitleLabel, attribute: .Right, relatedBy: .Equal, toItem: self, attribute: .Right, multiplier: 1.0, constant: -loginHorizontalEdgePadding)
-        let titleLabelCenterYConstraint = NSLayoutConstraint(item: uberTitleLabel, attribute: .CenterY, relatedBy: .Equal, toItem: uberImageView, attribute: .CenterY, multiplier: 1.0, constant: 0.0)
+        let titleLabelRightConstraint = NSLayoutConstraint(item: uberTitleLabel, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1.0, constant: -loginHorizontalEdgePadding)
+        let titleLabelCenterYConstraint = NSLayoutConstraint(item: uberTitleLabel, attribute: .centerY, relatedBy: .equal, toItem: uberImageView, attribute: .centerY, multiplier: 1.0, constant: 0.0)
         
-        let imagePaddingRightConstraint = NSLayoutConstraint(item: uberTitleLabel, attribute: .Left, relatedBy: .GreaterThanOrEqual , toItem: uberImageView, attribute: .Right, multiplier: 1.0, constant: imageLabelPadding)
+        let imagePaddingRightConstraint = NSLayoutConstraint(item: uberTitleLabel, attribute: .left, relatedBy: .greaterThanOrEqual , toItem: uberImageView, attribute: .right, multiplier: 1.0, constant: imageLabelPadding)
         
-        let horizontalCenterPaddingConstraint = NSLayoutConstraint(item: uberTitleLabel, attribute: .Left, relatedBy: .GreaterThanOrEqual , toItem: uberImageView, attribute: .Right, multiplier: 1.0, constant: horizontalCenterPadding)
+        let horizontalCenterPaddingConstraint = NSLayoutConstraint(item: uberTitleLabel, attribute: .left, relatedBy: .greaterThanOrEqual , toItem: uberImageView, attribute: .right, multiplier: 1.0, constant: horizontalCenterPadding)
         horizontalCenterPaddingConstraint.priority = UILayoutPriorityDefaultLow
         
         addConstraints([imageLeftConstraint, imageTopConstraint, imageBottomConstraint])
@@ -177,18 +177,18 @@ import UIKit
     
     //Mark: UIView
     
-    override public func sizeThatFits(size: CGSize) -> CGSize {
+    override public func sizeThatFits(_ size: CGSize) -> CGSize {
         let sizeThatFits = super.sizeThatFits(size)
         
-        let iconSizeThatFits = uberImageView.image?.size ?? CGSizeZero
-        let labelSizeThatFits = uberTitleLabel.intrinsicContentSize()
+        let iconSizeThatFits = uberImageView.image?.size ?? CGSize.zero
+        let labelSizeThatFits = uberTitleLabel.intrinsicContentSize
         
         let labelMinHeight = labelSizeThatFits.height + 2 * loginVerticalPadding
         let iconMinHeight = iconSizeThatFits.height + 2 * loginVerticalPadding
             
         let height = max(iconMinHeight, labelMinHeight)
         
-        return CGSizeMake(sizeThatFits.width + horizontalCenterPadding, height)
+        return CGSize(width: sizeThatFits.width + horizontalCenterPadding, height: height)
     }
     
     override public func updateConstraints() {
@@ -198,13 +198,13 @@ import UIKit
     
     //Mark: Internal Interface
     
-    func uberButtonTapped(button: UIButton) {
+    func uberButtonTapped(_ button: UIButton) {
         switch buttonState {
-        case .SignedIn:
+        case .signedIn:
             let success = TokenManager.deleteToken(accessTokenIdentifier, accessGroup: keychainAccessGroup)
             delegate?.loginButton(self, didLogoutWithSuccess: success)
             refreshContent()
-        case .SignedOut:
+        case .signedOut:
             loginManager.login(requestedScopes: scopes, presentingViewController: presentingViewController, completion: loginCompletion)
         }
     }
@@ -215,19 +215,19 @@ import UIKit
         uberTitleLabel.text = titleForButtonState(buttonState)
     }
     
-    private func titleForButtonState(buttonState: LoginButtonState) -> String {
+    private func titleForButtonState(_ buttonState: LoginButtonState) -> String {
         var titleText: String!
         switch buttonState {
-        case .SignedIn:
-            titleText = LocalizationUtil.localizedString(forKey: "Sign Out", comment: "Login Button Sign Out Description").uppercaseString
-        case .SignedOut:
-            titleText = LocalizationUtil.localizedString(forKey: "Sign In", comment: "Login Button Sign In Description").uppercaseString
+        case .signedIn:
+            titleText = LocalizationUtil.localizedString(forKey: "Sign Out", comment: "Login Button Sign Out Description").uppercased()
+        case .signedOut:
+            titleText = LocalizationUtil.localizedString(forKey: "Sign In", comment: "Login Button Sign In Description").uppercased()
         }
         return titleText
     }
 
-    private func getImage(name: String) -> UIImage? {
-        let bundle = NSBundle(forClass: RideRequestButton.self)
-        return UIImage(named: name, inBundle: bundle, compatibleWithTraitCollection: nil)?.imageWithRenderingMode(.AlwaysTemplate)
+    private func getImage(_ name: String) -> UIImage? {
+        let bundle = Bundle(for: RideRequestButton.self)
+        return UIImage(named: name, in: bundle, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
     }
 }

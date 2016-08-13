@@ -48,7 +48,7 @@ import ObjectMapper
 }
 
 extension Vehicle: UberModel {
-    public func mapping(map: Map) {
+    public func mapping(_ map: Map) {
         make         <- map["make"]
         model        <- map["model"]
         licensePlate <- map["license_plate"]

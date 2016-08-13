@@ -43,7 +43,7 @@ import ObjectMapper
 }
 
 extension Place: UberModel {
-    public func mapping(map: Map) {
+    public func mapping(_ map: Map) {
         address <- map["address"]
     }
 }

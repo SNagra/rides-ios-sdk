@@ -40,16 +40,16 @@ import UIKit
     public var scopes: [RidesScope]
     
     /// The Callback URL Type to use for this authentication method
-    public var callbackURIType: CallbackURIType = .General
+    public var callbackURIType: CallbackURIType = .general
     
     init(scopes: [RidesScope]) {
         self.scopes = scopes
         super.init()
     }
     
-    func handleRedirectRequest(request: NSURLRequest) -> Bool {
+    func handleRedirectRequest(_ request: URLRequest) -> Bool {
         var didHandleRedirect = false
-        if let url = request.URL where AuthenticationURLUtility.shouldHandleRedirectURL(url, type: callbackURIType) {
+        if let url = request.url where AuthenticationURLUtility.shouldHandleRedirectURL(url, type: callbackURIType) {
             do {
                 let accessToken = try AccessTokenFactory.createAccessTokenFromRedirectURL(url)
                 
@@ -58,14 +58,14 @@ import UIKit
                 var error: NSError?
                 let success = TokenManager.saveToken(accessToken, tokenIdentifier: tokenIdentifier, accessGroup: accessGroup)
                 if !success {
-                    error = RidesAuthenticationErrorFactory.errorForType(ridesAuthenticationErrorType: .UnableToSaveAccessToken)
+                    error = RidesAuthenticationErrorFactory.errorForType(ridesAuthenticationErrorType: .unableToSaveAccessToken)
                     print("Error: access token failed to save to keychain")
                 }
                 loginCompletion?(accessToken: accessToken, error: error)
             } catch let ridesError as NSError {
                 loginCompletion?(accessToken: nil, error: ridesError)
             } catch {
-                loginCompletion?(accessToken: nil, error: RidesAuthenticationErrorFactory.errorForType(ridesAuthenticationErrorType: .InvalidResponse))
+                loginCompletion?(accessToken: nil, error: RidesAuthenticationErrorFactory.errorForType(ridesAuthenticationErrorType: .invalidResponse))
             }
             didHandleRedirect = true
         }

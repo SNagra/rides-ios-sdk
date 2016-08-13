@@ -27,13 +27,13 @@
 */
 @objc(UBSDKResponse) public class Response: NSObject {
     /// String representing JSON response data.
-    public var data: NSData?
+    public var data: Data?
     
     /// HTTP status code of response.
     public var statusCode: Int
     
     /// Response metadata.
-    public var response: NSHTTPURLResponse?
+    public var response: HTTPURLResponse?
     
     /// NSError representing an optional error.
     public var error: RidesError?
@@ -45,7 +45,7 @@
      - parameter response: Provides response metadata, such as HTTP headers and status code.
      - parameter error:    Indicates why the request failed, or nil if the request was successful.
      */
-    init(data: NSData?, statusCode: Int, response: NSHTTPURLResponse?, error: RidesError?) {
+    init(data: Data?, statusCode: Int, response: HTTPURLResponse?, error: RidesError?) {
         self.data = data
         self.response = response
         self.statusCode = statusCode
@@ -60,13 +60,13 @@
             return ""
         }
         
-        return NSString(data: data, encoding: NSUTF8StringEncoding)!
+        return NSString(data: data, encoding: String.Encoding.utf8.rawValue)!
     }
 }
 
 /// Class to create and execute NSURLRequests.
 class Request: NSObject {
-    let session: NSURLSession?
+    let session: URLSession?
     let endpoint: UberAPI
     let urlRequest: NSMutableURLRequest
     let serverToken: NSString?
@@ -80,7 +80,7 @@ class Request: NSObject {
      - parameter endpoint:    UberAPI conforming endpoint.
      - parameter serverToken: Developer's server token.
      */
-    init(session: NSURLSession?, endpoint: UberAPI, serverToken: NSString? = nil, bearerToken: NSString? = nil) {
+    init(session: URLSession?, endpoint: UberAPI, serverToken: NSString? = nil, bearerToken: NSString? = nil) {
         self.session = session
         self.endpoint = endpoint
         self.urlRequest = NSMutableURLRequest()
@@ -93,12 +93,12 @@ class Request: NSObject {
      
      - returns: constructed NSURL or nil if construction failed.
      */
-    func requestURL() -> NSURL? {
-        let components = NSURLComponents(string: endpoint.host)!
+    func requestURL() -> URL? {
+        var components = URLComponents(string: endpoint.host)!
         components.path = endpoint.path
         components.queryItems = endpoint.query
         
-        return components.URL
+        return components.url
     }
     
     /**
@@ -122,9 +122,9 @@ class Request: NSObject {
      Prepares the NSURLRequest by adding necessary fields.
      */
     func prepare() {
-        urlRequest.URL = requestURL()
-        urlRequest.HTTPMethod = endpoint.method.rawValue
-        urlRequest.HTTPBody = endpoint.body
+        urlRequest.url = requestURL()
+        urlRequest.httpMethod = endpoint.method.rawValue
+        urlRequest.httpBody = endpoint.body
         addHeaders()
     }
     
@@ -133,15 +133,15 @@ class Request: NSObject {
      
      - parameter completion: completion handler for returned Response.
      */
-    func execute(completion: (response: Response) -> Void) {
+    func execute(_ completion: (response: Response) -> Void) {
         guard let session = session else {
             return
         }
         
         prepare()
-        let task = session.dataTaskWithRequest(urlRequest, completionHandler: {
+        let task = session.dataTask(with: urlRequest, completionHandler: {
             (data, response, error) in
-            let httpResponse: NSHTTPURLResponse? = response as? NSHTTPURLResponse
+            let httpResponse: HTTPURLResponse? = response as? HTTPURLResponse
             var statusCode: Int = 0
             var ridesError: RidesError?
             
@@ -153,7 +153,7 @@ class Request: NSObject {
                     break errorCheck
                 }
                 
-                let jsonString = NSString(data: data!, encoding: NSUTF8StringEncoding)!
+                let jsonString = NSString(data: data!, encoding: String.Encoding.utf8)!
                 if statusCode >= 400 && statusCode <= 499 {
                     ridesError = ModelMapper<RidesClientError>().mapFromJSON(jsonString)
                 } else if (statusCode >= 500 && statusCode <= 599) {

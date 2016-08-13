@@ -47,7 +47,7 @@ import ObjectMapper
 }
 
 extension TripHistory: UberModel {
-    public func mapping(map: Map) {
+    public func mapping(_ map: Map) {
         offset  <- map["offset"]
         limit   <- map["limit"]
         count   <- map["count"]
@@ -68,13 +68,13 @@ extension TripHistory: UberModel {
     public private(set) var distance: Float = 0.0
     
     /// Represents timestamp of activity request time in current locale.
-    public private(set) var requestTime: NSDate?
+    public private(set) var requestTime: Date?
     
     /// Represents timestamp of activity start time in current locale.
-    public private(set) var startTime: NSDate?
+    public private(set) var startTime: Date?
     
     /// Represents timestamp of activity end time in current locale.
-    public private(set) var endTime: NSDate?
+    public private(set) var endTime: Date?
     
     /// City that activity started in.
     public private(set) var startCity: TripCity?
@@ -90,7 +90,7 @@ extension TripHistory: UberModel {
 }
 
 extension UserActivity: UberModel {
-    public func mapping(map: Map) {
+    public func mapping(_ map: Map) {
         distance    <- map["distance"]
         requestTime <- (map["request_time"], DateTransform())
         startTime   <- (map["start_time"], DateTransform())
@@ -99,7 +99,7 @@ extension UserActivity: UberModel {
         requestID   <- map["request_id"]
         productID   <- map["product_id"]
         
-        status = .Unknown
+        status = .unknown
         if let value = map["status"].currentValue as? String {
             status = RideStatusFactory.convertRideStatus(value)
         }
@@ -126,7 +126,7 @@ extension UserActivity: UberModel {
 }
 
 extension TripCity: Mappable {
-    public func mapping(map: Map) {
+    public func mapping(_ map: Map) {
         latitude  <- map["latitude"]
         longitude <- map["longitude"]
         name      <- map["display_name"]

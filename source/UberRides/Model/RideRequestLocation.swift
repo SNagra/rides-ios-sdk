@@ -48,7 +48,7 @@ import ObjectMapper
 }
 
 extension RideRequestLocation: UberModel {
-    public func mapping(map: Map) {
+    public func mapping(_ map: Map) {
         bearing   <- map["bearing"]
         eta       <- map["eta"]
         latitude  <- map["latitude"]

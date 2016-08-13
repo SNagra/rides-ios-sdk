@@ -53,7 +53,7 @@ import ObjectMapper
 }
 
 extension UserProfile: UberModel {
-    public func mapping(map: Map) {
+    public func mapping(_ map: Map) {
         firstName   <- map["first_name"]
         lastName    <- map["last_name"]
         email       <- map["email"]

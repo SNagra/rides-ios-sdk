@@ -86,10 +86,10 @@ extension RideRequestViewRequestingBehavior : RideRequesting {
      - parameter rideParameters: The RideParameters to use for building and prefilling
      the RideRequestView
      */
-    public func requestRide(rideParameters: RideParameters?) {
+    public func requestRide(_ rideParameters: RideParameters?) {
         if let rideParameters = rideParameters {
             modalRideRequestViewController.rideRequestViewController.rideRequestView.rideParameters = rideParameters
         }
-        presentingViewController.presentViewController(modalRideRequestViewController, animated: true, completion: nil)
+        presentingViewController.present(modalRideRequestViewController, animated: true, completion: nil)
     }
 }

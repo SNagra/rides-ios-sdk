@@ -42,7 +42,7 @@ import ObjectMapper
 }
 
 extension RideMap: UberModel {
-    public func mapping(map: Map) {
+    public func mapping(_ map: Map) {
         path      <- map["href"]
         requestID <- map["request_id"]
     }

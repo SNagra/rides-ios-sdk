@@ -48,7 +48,7 @@ import ObjectMapper
 }
 
 extension Driver: UberModel {
-    public func mapping(map: Map) {
+    public func mapping(_ map: Map) {
         name        <- map["name"]
         pictureURL  <- map["picture_url"]
         phoneNumber <- map["phone_number"]

@@ -45,7 +45,7 @@ import ObjectMapper
 }
 
 extension DistanceEstimate: UberModel {
-    public func mapping(map: Map) {
+    public func mapping(_ map: Map) {
         distance     <- map["distance_estimate"]
         distanceUnit <- map["distance_unit"]
         duration     <- map["duration_estimate"]

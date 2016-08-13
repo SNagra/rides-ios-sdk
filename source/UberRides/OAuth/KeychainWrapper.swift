@@ -42,7 +42,7 @@ class KeychainWrapper: NSObject {
      
      - parameter group: String representing name of keychain access group.
      */
-    func setAccessGroup(accessGroup: String) {
+    func setAccessGroup(_ accessGroup: String) {
         self.accessGroup = accessGroup
     }
     
@@ -54,10 +54,10 @@ class KeychainWrapper: NSObject {
      
      - returns: true if object was successfully added to keychain.
      */
-    func setObject(object: NSCoding, key: String) -> Bool {
+    func setObject(_ object: NSCoding, key: String) -> Bool {
         var keychainItemData = getKeychainItemData(key)
 
-        let value = NSKeyedArchiver.archivedDataWithRootObject(object)
+        let value = NSKeyedArchiver.archivedData(withRootObject: object)
         keychainItemData[AttrAccessible] = kSecAttrAccessibleWhenUnlocked
         keychainItemData[ValueData] = value
         
@@ -77,7 +77,7 @@ class KeychainWrapper: NSObject {
      
      - returns: the object in keychain or nil if none exists for the given key.
      */
-    func getObjectForKey(key: String) -> NSCoding? {
+    func getObjectForKey(_ key: String) -> NSCoding? {
         var keychainItemData = getKeychainItemData(key)
         
         keychainItemData[MatchLimit] = kSecMatchLimitOne
@@ -90,8 +90,8 @@ class KeychainWrapper: NSObject {
         
         var object: AnyObject?
         
-        if let data = data as? NSData {
-            object = NSKeyedUnarchiver.unarchiveObjectWithData(data)
+        if let data = data as? Data {
+            object = NSKeyedUnarchiver.unarchiveObject(with: data)
         }
         
         return result == noErr ? object as? NSCoding : nil
@@ -104,7 +104,7 @@ class KeychainWrapper: NSObject {
      
      - returns: true if object was successfully deleted.
      */
-    func deleteObjectForKey(key: String) -> Bool {
+    func deleteObjectForKey(_ key: String) -> Bool {
         let keychainItemData = getKeychainItemData(key)
         
         let result = SecItemDelete(keychainItemData)
@@ -117,10 +117,10 @@ class KeychainWrapper: NSObject {
      
      - returns: dictionary of base attributes for keychain query.
      */
-    private func getKeychainItemData(key: String) -> [String: AnyObject] {
+    private func getKeychainItemData(_ key: String) -> [String: AnyObject] {
         var keychainItemData = [String: AnyObject]()
         
-        let identifier = key.dataUsingEncoding(NSUTF8StringEncoding)
+        let identifier = key.data(using: String.Encoding.utf8)
         keychainItemData[AttrGeneric] = identifier
         keychainItemData[AttrAccount] = identifier
         keychainItemData[AttrService] = self.dynamicType.serviceName

@@ -45,7 +45,7 @@ import ObjectMapper
 }
 
 extension RideCharge: UberModel {
-    public func mapping(map: Map) {
+    public func mapping(_ map: Map) {
         amount <- map["amount"]
         name   <- map["name"]
         type   <- map["type"]

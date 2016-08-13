@@ -44,6 +44,6 @@ import UIKit
     override func login() {
         let oauthViewController = OAuthViewController(loginAuthenticator: self)
         let navController = UINavigationController(rootViewController: oauthViewController)
-        presentingViewController.presentViewController(navController, animated: true, completion: nil)
+        presentingViewController.present(navController, animated: true, completion: nil)
     }
 }

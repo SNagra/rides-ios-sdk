@@ -45,7 +45,7 @@ import ObjectMapper
 }
 
 extension RideEstimate: UberModel {
-    public func mapping(map: Map) {
+    public func mapping(_ map: Map) {
         priceEstimate    <- map["price"]
         distanceEstimate <- map["trip"]
         pickupEstimate   <- map["pickup_estimate"]
